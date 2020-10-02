@@ -4,8 +4,9 @@
 	import MapRegion from "./Components/MapRegion.svelte";
 	import GetRegionData from "./Data/getRegionData";
 	import getRegionData from "./Data/getRegionData";
-	import RegionInformation  from "./Components/RegionInformation.svelte"
-	let activeRegion = "no region selected";
+	import RegionInformation from "./Components/RegionInformation.svelte";
+	import Overview from "./Components/Overview.svelte";
+	let activeRegion;
 </script>
 
 <style>
@@ -35,8 +36,16 @@
 </style>
 
 <main class="app">
-	<h1>{activeRegion}</h1>
-	<RegionInformation region = {getRegionData('Derbyshire')}/>
+	{#if activeRegion}
+		<RegionInformation
+			region={getRegionData(activeRegion)}
+			onClose={() => {
+				activeRegion = undefined;
+			}} />
+	{:else}
+		<Overview />
+	{/if}
+
 	<div class="map-container">
 		<MapContainer>
 			{#each regions as { name, svgPath }}
@@ -48,7 +57,6 @@
 					on:click={() => {
 						activeRegion = name;
 						console.log(getRegionData(name));
-
 					}} />
 			{/each}
 		</MapContainer>
